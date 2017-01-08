@@ -3,6 +3,9 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Cocur\Slugify\Slugify;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
  * Post
@@ -22,15 +25,22 @@ class Post
     private $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="posts")
+     * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
+     */
+    private $category;
+
+    /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
 
     /**
      * @var string
-     *
+     * @Assert\Regex("/^[a-z0-9\-]+$/")
      * @ORM\Column(name="slug", type="string", length=255)
      */
     private $slug;
@@ -100,7 +110,10 @@ class Post
      */
     public function setSlug($slug)
     {
-        $this->slug = $slug;
+        if (empty($slug)) {
+            $slug = $this->name;
+        }
+        $this->slug = (new Slugify())->slugify($slug);
 
         return $this;
     }
@@ -187,4 +200,3 @@ class Post
         return $this->updatedAt;
     }
 }
-

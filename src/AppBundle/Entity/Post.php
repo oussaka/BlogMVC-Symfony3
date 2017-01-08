@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Cocur\Slugify\Slugify;
+use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
  * Post
@@ -23,6 +25,12 @@ class Post
     private $id;
 
     /**
+     * @ORM\ManyToOne(targetEntity="Category", inversedBy="posts")
+     * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
+     */
+    private $category;
+
+    /**
      * @var string
      *
      * @Assert\NotBlank()
@@ -32,7 +40,7 @@ class Post
 
     /**
      * @var string
-     *
+     * @Assert\Regex("/^[a-z0-9\-]+$/")
      * @ORM\Column(name="slug", type="string", length=255)
      */
     private $slug;
@@ -57,7 +65,6 @@ class Post
      * @ORM\Column(name="updated_at", type="datetime")
      */
     private $updatedAt;
-
 
     /**
      * Get id
@@ -102,7 +109,10 @@ class Post
      */
     public function setSlug($slug)
     {
-        $this->slug = $slug;
+        if (empty($slug)) {
+            $slug = $this->name;
+        }
+        $this->slug = (new Slugify())->slugify($slug);
 
         return $this;
     }
@@ -187,5 +197,29 @@ class Post
     public function getUpdatedAt()
     {
         return $this->updatedAt;
+    }
+
+    /**
+     * Set category
+     *
+     * @param \AppBundle\Entity\Category $category
+     *
+     * @return Post
+     */
+    public function setCategory(\AppBundle\Entity\Category $category = null)
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * Get category
+     *
+     * @return \AppBundle\Entity\Category
+     */
+    public function getCategory()
+    {
+        return $this->category;
     }
 }

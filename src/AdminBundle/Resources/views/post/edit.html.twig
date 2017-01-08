@@ -1,0 +1,27 @@
+{% extends 'AdminBundle::base.html.twig' %}
+
+{% block body %}
+    <h1>Post edit</h1>
+
+    <p>
+        <a href="{{ path('post_index') }}">< Back to the list</a>
+    </p>
+
+    {{ form_start(edit_form) }}
+
+        <div class="row">
+            <div class="col-sm-6">
+                {{ form_row(edit_form.name) }}
+            </div>
+            <div class="col-sm-6">
+                {{ form_row(edit_form.slug) }}
+            </div>
+        </div>
+        {{ form_widget(edit_form) }}
+        <div class="form-group">
+            <button type="submit" class="btn-primary btn">Edit post</button>
+        </div>
+
+    {{ form_end(edit_form) }}
+
+{% endblock %}

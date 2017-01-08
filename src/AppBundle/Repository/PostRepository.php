@@ -10,4 +10,15 @@ namespace AppBundle\Repository;
  */
 class PostRepository extends \Doctrine\ORM\EntityRepository
 {
+
+    public function findAllWithCategoryAndUser ($query = null) {
+        $qb = $this->createQueryBuilder("p");
+        if ($query) {
+            $qb = $query($qb);
+        }
+        $query = $qb->getQuery();
+        $query->setFetchMode("AppBundle\Entity\Post", "category", \Doctrine\ORM\Mapping\ClassMetadata::FETCH_EAGER);
+        return $query->getResult();
+    }
+
 }
