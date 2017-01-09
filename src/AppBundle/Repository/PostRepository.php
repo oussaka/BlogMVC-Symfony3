@@ -2,6 +2,10 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Post;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Query;
+
 /**
  * PostRepository
  *
@@ -10,15 +14,20 @@ namespace AppBundle\Repository;
  */
 class PostRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * Add a fetchmode Eager for categories
+     * @return \Doctrine\ORM\QueryBuilder
+     */
+    public function createQueryBuilderWithCategory () {
+        return $this->createQueryBuilder("p")
+            ->leftJoin("p.category", "c")
+            ->addSelect("c");
+    }
 
-    public function findAllWithCategoryAndUser ($query = null) {
-        $qb = $this->createQueryBuilder("p");
-        if ($query) {
-            $qb = $query($qb);
-        }
-        $query = $qb->getQuery();
-        $query->setFetchMode("AppBundle\Entity\Post", "category", \Doctrine\ORM\Mapping\ClassMetadata::FETCH_EAGER);
-        return $query->getResult();
+    public function withUser () {
+        return $this->createQueryBuilder("p")
+            ->leftJoin("p.category", "c")
+            ->addSelect("c");
     }
 
 }

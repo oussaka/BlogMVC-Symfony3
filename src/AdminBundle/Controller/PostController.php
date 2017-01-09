@@ -3,6 +3,7 @@
 namespace AdminBundle\Controller;
 
 use AppBundle\Entity\Post;
+use AppBundle\Form\PostType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
@@ -10,7 +11,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component
 /**
  * Post controller.
  *
- * @Route("post")
+ * @Route("post", name="admin")
  */
 class PostController extends Controller
 {
@@ -20,14 +21,30 @@ class PostController extends Controller
      * @Route("/", name="admin_post_index")
      * @Method("GET")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
+        $repository = $em->getRepository('AppBundle:Post');
+        $paginator  = $this->get('knp_paginator');
 
-        $posts = $em->getRepository('AppBundle:Post')->findAll();
+        $query = $repository->createQueryBuilderWithCategory()
+            ->orderBy('p.createdAt', 'desc')
+            ->getQuery();
+
+        $posts = $paginator->paginate(
+            $query,
+            $request->query->getInt('page', 1),
+            10
+        );
+
+        $deleteForms = [];
+        foreach($posts as $post) {
+            $deleteForms[$post->getId()] = $this->createDeleteForm($post)->createView();
+        }
 
         return $this->render('AdminBundle::post/index.html.twig', array(
             'posts' => $posts,
+            'delete_forms' => $deleteForms
         ));
     }
 
@@ -40,36 +57,23 @@ class PostController extends Controller
     public function newAction(Request $request)
     {
         $post = new Post();
-        $form = $this->createForm('AppBundle\Form\PostType', $post);
+        $form = $this->createForm('AppBundle\Form\PostType', $post, [
+            'action' => $this->generateUrl('admin_post_new')
+        ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($post);
             $em->flush($post);
-
-            return $this->redirectToRoute('post_show', array('id' => $post->getId()));
+            $this->addFlash('success', 'Post created successfully');
+            return $this->redirectToRoute('admin_post_index');
         }
 
         return $this->render('AdminBundle::post/new.html.twig', array(
             'post' => $post,
             'form' => $form->createView(),
-        ));
-    }
-
-    /**
-     * Finds and displays a post entity.
-     *
-     * @Route("/{id}", name="admin_post_show")
-     * @Method("GET")
-     */
-    public function showAction(Post $post)
-    {
-        $deleteForm = $this->createDeleteForm($post);
-
-        return $this->render('AdminBundle::post/show.html.twig', array(
-            'post' => $post,
-            'delete_form' => $deleteForm->createView(),
         ));
     }
 
@@ -81,20 +85,20 @@ class PostController extends Controller
      */
     public function editAction(Request $request, Post $post)
     {
-        $deleteForm = $this->createDeleteForm($post);
-        $editForm = $this->createForm('AppBundle\Form\PostType', $post);
+        $editForm = $this->createForm(PostType::class, $post, [
+            'action' => $this->generateUrl('admin_post_edit', ['id' => $post->getId()])
+        ]);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-
-            return $this->redirectToRoute('post_edit', array('id' => $post->getId()));
+            $this->addFlash('success', 'Post edited successfully');
+            return $this->redirectToRoute('admin_post_edit', array('id' => $post->getId()));
         }
 
         return $this->render('AdminBundle::post/edit.html.twig', array(
             'post' => $post,
-            'edit_form' => $editForm->createView(),
-            'delete_form' => $deleteForm->createView(),
+            'edit_form' => $editForm->createView()
         ));
     }
 
@@ -112,10 +116,11 @@ class PostController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->remove($post);
+            $this->addFlash('success', 'Post deleted');
             $em->flush($post);
         }
 
-        return $this->redirectToRoute('post_index');
+        return $this->redirectToRoute('admin_post_index');
     }
 
     /**
@@ -128,7 +133,7 @@ class PostController extends Controller
     private function createDeleteForm(Post $post)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('post_delete', array('id' => $post->getId())))
+            ->setAction($this->generateUrl('admin_post_delete', array('id' => $post->getId())))
             ->setMethod('DELETE')
             ->getForm()
             ;

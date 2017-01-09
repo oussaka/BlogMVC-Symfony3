@@ -1,16 +1,12 @@
 {% extends 'AdminBundle::base.html.twig' %}
 
 {% block body %}
-    <h1>Post creation</h1>
+    <h1>New Post</h1>
 
-    {{ form_start(form) }}
-        {{ form_widget(form) }}
-        <input type="submit" value="Create" />
-    {{ form_end(form) }}
+    <p>
+        <a href="{{ path('admin_post_index') }}">< Back to the list</a>
+    </p>
 
-    <ul>
-        <li>
-            <a href="{{ path('post_index') }}">Back to the list</a>
-        </li>
-    </ul>
+    {% include "AdminBundle::post/form.html.twig" with {form: form} %}
+
 {% endblock %}

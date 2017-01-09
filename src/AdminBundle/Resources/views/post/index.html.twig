@@ -23,14 +23,21 @@
             <tr>
                 <td>{{ post.id }}</td>
                 <td>{{ post.name }}</td>
-                <td>{{ post.slug }}</td>
+                <td>{{ post.category.name }}</td>
                 <td>{% if post.createdAt %}{{ post.createdAt | date('d/m/Y H:i') }}{% endif %}</td>
                 <td>
                     <a href="{{ path('admin_post_edit', {id: post.id}) }}" class="btn btn-primary">Edit</a>
-                    <a href="{{ path('admin_post_delete', {id: post.id}) }}" class="btn btn-danger">Delete</a>
+                    {{ form_start(delete_forms[post.id], {attr: {style: 'display:inline'}}) }}
+                    <input type="submit" value="Delete" class="btn btn-danger">
+                    {{ form_end(delete_forms[post.id]) }}
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+
+    <div class="navigation">
+        {{ knp_pagination_render(posts) }}
+    </div>
+
 {% endblock %}

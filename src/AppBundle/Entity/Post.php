@@ -2,9 +2,11 @@
 
 namespace AppBundle\Entity;
 
+use AppBundle\Concern\Timestamps;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Cocur\Slugify\Slugify;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Mapping\ClassMetadata;
 
 /**
@@ -12,9 +14,14 @@ use Symfony\Component\Validator\Mapping\ClassMetadata;
  *
  * @ORM\Table(name="post")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\PostRepository")
+ * @UniqueEntity("slug")
+ * @ORM\HasLifecycleCallbacks()
  */
 class Post
 {
+
+    use Timestamps;
+
     /**
      * @var int
      *

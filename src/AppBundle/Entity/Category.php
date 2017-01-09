@@ -8,10 +8,12 @@ use Doctrine\ORM\Mapping as ORM;
  * Category
  *
  * @ORM\Table(name="category")
+ * @ORM\HasLifecycleCallbacks()
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CategoryRepository")
  */
 class Category
 {
+
     /**
      * @var int
      *
@@ -134,6 +136,7 @@ class Category
      */
     public function __construct()
     {
+        var_dump('constructed Category');
         $this->posts = new \Doctrine\Common\Collections\ArrayCollection();
     }
 

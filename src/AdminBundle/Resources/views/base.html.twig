@@ -26,13 +26,21 @@
     <a class="navbar-brand" href="{{ path('root') }}">Blogmvc Administration</a>
     <ul class="nav navbar-nav">
         <li class="nav-item active">
-            <a class="nav-link" href="#">Blog</a>
+            <a class="nav-link" href="{{ path('admin_post_index') }}">Blog</a>
         </li>
         </li>
     </ul>
 </nav>
 
 <div class="container">
+    {% for type, flashes in app.session.flashbag.all %}
+        {% for flash in flashes %}
+            <div class="alert alert-{{ type }} fade in">
+                {{ flash }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
     {% block body %}{% endblock %}
 </div><!-- /.container -->
 
