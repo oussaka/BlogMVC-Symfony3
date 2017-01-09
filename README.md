@@ -3,6 +3,13 @@ BlogMVC : Symfony 3
 
 This is my contribution to BlogMVC.com using Symfony 3. I used this project to learn the framework so if you think some patterns are not respected please create an issue :). 
 
+```bash
+composer install
+php bin/console doctrine:schema:update --force
+php bin/console doctrine:fixtures:load
+php bin/console server:run
+```
+
 Bundle
 ---------
 
@@ -17,7 +24,6 @@ We could cheat even more using
 - [SonataAdminBundle](https://github.com/sonata-project/SonataAdminBundle) to manage backend
 - [StofDoctrineExtensionsBundle](https://github.com/stof/StofDoctrineExtensionsBundle) to manage the "sluggable" behaviour
 
-
 Questions 
 ----------
 
@@ -28,4 +34,4 @@ Is there a way to attach a subscriber to an Entity using annotation or anything 
 - To avoid n+1 queries on a ManyToOne I have to give up the findAll / findBy methods and use the queryBuilder to make a LEFT JOIN. Is there a better way ? Does it affect Doctrine hydratation ?
 - I split my backend in a bundle instead of namespace. is it considered a good or bad practice ? Is there a way to prefix all routes inside a Bundle ?
 - The sidebar need to be shared accress pages. I created a service injected as a "global" twig variable [PartialService](https://github.com/Grafikart/BlogMVC-Symfony3/blob/master/src/AppBundle/Twig/Partials.php). Is there a better way to achieve that ?
-- For the timestamps (created_at and updated_at) I used a trait since it seemed to be the easies way to reach the goal. Is it considered bad ?
+- For the timestamps (created_at and updated_at) I used a trait since it seemed to be the easies way to reach the goal. Is it considered bad 
