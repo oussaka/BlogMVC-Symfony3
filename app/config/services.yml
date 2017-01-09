@@ -13,6 +13,6 @@ services:
     class: AppBundle\EventListener\CounterSubscriber
     tags:
       - { name: doctrine.event_subscriber, connection: default }
-#    service_name:
-#        class: AppBundle\Directory\ClassName
-#        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+  app.twig_partials:
+    class: AppBundle\Twig\Partials
+    arguments: ["@service_container"]

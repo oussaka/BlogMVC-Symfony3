@@ -66,7 +66,7 @@ class PostController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($post);
-            $em->flush($post);
+            $em->flush();
             $this->addFlash('success', 'Post created successfully');
             return $this->redirectToRoute('admin_post_index');
         }

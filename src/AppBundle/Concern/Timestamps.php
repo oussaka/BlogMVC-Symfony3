@@ -11,7 +11,9 @@ trait Timestamps {
      */
     public function createdTimestamps () {
         $this->setCreatedAt(new \DateTime());
-        $this->setUpdatedAt(new \DateTime());
+        if (property_exists($this, 'updatedAt')){
+            $this->setUpdatedAt(new \DateTime());
+        }
     }
 
     /**
@@ -19,7 +21,9 @@ trait Timestamps {
      * @ORM\PreUpdate()
      */
     public function updatedTimestamps () {
-        $this->setUpdatedAt(new \DateTime());
+        if (property_exists($this, 'updatedAt')){
+            $this->setUpdatedAt(new \DateTime());
+        }
     }
 
 }

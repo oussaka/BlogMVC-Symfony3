@@ -25,7 +25,7 @@ class CounterSubscriber implements EventSubscriber
     }
 
     public function preUpdate(PreUpdateEventArgs $event) {
-        if ($event->getEntity() instanceof Post) {
+        if ($event->getObject() instanceof Post) {
             if ($event->hasChangedField('category')) {
                 $event
                     ->getEntityManager()
@@ -37,7 +37,7 @@ class CounterSubscriber implements EventSubscriber
     }
 
     public function postRemove(LifecycleEventArgs $event) {
-        if ($event->getEntity() instanceof Post) {
+        if ($event->getObject() instanceof Post) {
             $event
                 ->getEntityManager()
                 ->getRepository("AppBundle:Category")
@@ -46,7 +46,7 @@ class CounterSubscriber implements EventSubscriber
     }
 
     public function postPersist(LifecycleEventArgs $event) {
-        if ($event->getEntity() instanceof Post) {
+        if ($event->getObject() instanceof Post) {
             $event
                 ->getEntityManager()
                 ->getRepository("AppBundle:Category")

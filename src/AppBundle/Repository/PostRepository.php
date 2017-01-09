@@ -21,13 +21,24 @@ class PostRepository extends \Doctrine\ORM\EntityRepository
     public function createQueryBuilderWithCategory () {
         return $this->createQueryBuilder("p")
             ->leftJoin("p.category", "c")
-            ->addSelect("c");
+            ->addSelect("c")
+            ->orderBy("p.createdAt", "DESC");
     }
 
-    public function withUser () {
+    public function createQueryBuilderWithUser () {
+        return $this->createQueryBuilder("p")
+            ->leftJoin("p.user", "u")
+            ->addSelect("u")
+            ->orderBy("p.createdAt", "DESC");
+    }
+
+    public function createQueryBuilderWithUserAndCategory () {
         return $this->createQueryBuilder("p")
             ->leftJoin("p.category", "c")
-            ->addSelect("c");
+            ->addSelect("c")
+            ->leftJoin("p.user", "u")
+            ->addSelect("u")
+            ->orderBy("p.createdAt", "DESC");
     }
 
 }

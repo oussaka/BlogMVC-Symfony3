@@ -4,15 +4,13 @@ security:
 
     # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
     providers:
-        in_memory:
-            memory:
-                users:
-                    admin:
-                        password: $2y$12$hec5XjSWKZhYwCIfl0u7/uV1q8seWoj58Ke4BxJDQIhFOZv1yo46i
-                        roles: 'ROLE_ADMIN'
+        db_provider:
+            entity:
+                class: AppBundle:User
+                property: username
 
     encoders:
-        Symfony\Component\Security\Core\User\User:
+        AppBundle\Entity\User:
             algorithm: bcrypt
             cost: 12
 
@@ -23,11 +21,15 @@ security:
             security: false
 
         main:
+            provider: db_provider
             anonymous: ~
             form_login:
                 login_path: login
                 check_path: login
                 csrf_token_generator: security.csrf.token_manager
+            logout:
+              path: /logout
+              target: /
             # activate different ways to authenticate
 
             # http_basic: ~

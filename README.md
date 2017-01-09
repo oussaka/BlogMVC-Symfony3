@@ -1,69 +1,31 @@
-Symfony Standard Edition
+BlogMVC : Symfony 3
 ========================
 
-Welcome to the Symfony Standard Edition - a fully-functional Symfony
-application that you can use as the skeleton for your new applications.
+This is my contribution to BlogMVC.com using Symfony 3. I used this project to learn the framework so if you think some patterns are not respected please create an issue :). 
 
-For details on how to download and get started with Symfony, see the
-[Installation][1] chapter of the Symfony Documentation.
+Bundle
+---------
 
-What's inside?
---------------
+I cheated a bit using 2 bundles :
 
-The Symfony Standard Edition is configured with the following defaults:
+- KnpPaginatorBundle for the pagination
+- KnpTimeBundle for the "3 minutes ago" text
 
-  * An AppBundle you can use to start coding;
+We could cheat even more using 
 
-  * Twig as the only configured template engine;
+- [FOSUserBundle](https://github.com/FriendsOfSymfony/FOSUserBundle) to manage user login / registration
+- [SonataAdminBundle](https://github.com/sonata-project/SonataAdminBundle) to manage backend
+- [StofDoctrineExtensionsBundle](https://github.com/stof/StofDoctrineExtensionsBundle) to manage the "sluggable" behaviour
 
-  * Doctrine ORM/DBAL;
 
-  * Swiftmailer;
+Questions 
+----------
 
-  * Annotations enabled for everything.
+Here are some question discovered during this project
 
-It comes pre-configured with the following bundles:
-
-  * **FrameworkBundle** - The core Symfony framework bundle
-
-  * [**SensioFrameworkExtraBundle**][6] - Adds several enhancements, including
-    template and routing annotation capability
-
-  * [**DoctrineBundle**][7] - Adds support for the Doctrine ORM
-
-  * [**TwigBundle**][8] - Adds support for the Twig templating engine
-
-  * [**SecurityBundle**][9] - Adds security by integrating Symfony's security
-    component
-
-  * [**SwiftmailerBundle**][10] - Adds support for Swiftmailer, a library for
-    sending emails
-
-  * [**MonologBundle**][11] - Adds support for Monolog, a logging library
-
-  * **WebProfilerBundle** (in dev/test env) - Adds profiling functionality and
-    the web debug toolbar
-
-  * **SensioDistributionBundle** (in dev/test env) - Adds functionality for
-    configuring and working with Symfony distributions
-
-  * [**SensioGeneratorBundle**][13] (in dev/test env) - Adds code generation
-    capabilities
-
-  * **DebugBundle** (in dev/test env) - Adds Debug and VarDumper component
-    integration
-
-All libraries and bundles included in the Symfony Standard Edition are
-released under the MIT or BSD license.
-
-Enjoy!
-
-[1]:  https://symfony.com/doc/3.2/setup.html
-[6]:  https://symfony.com/doc/current/bundles/SensioFrameworkExtraBundle/index.html
-[7]:  https://symfony.com/doc/3.2/doctrine.html
-[8]:  https://symfony.com/doc/3.2/templating.html
-[9]:  https://symfony.com/doc/3.2/security.html
-[10]: https://symfony.com/doc/3.2/email.html
-[11]: https://symfony.com/doc/3.2/logging.html
-[12]: https://symfony.com/doc/3.2/assetic/asset_management.html
-[13]: https://symfony.com/doc/current/bundles/SensioGeneratorBundle/index.html
+- To "counter cache" the number of posts associated to each Category I created an [EventSubscriber](https://github.com/Grafikart/BlogMVC-Symfony3/blob/master/src/AppBundle/EventListener/CounterSubscriber.php) but I have to check the entity type.
+Is there a way to attach a subscriber to an Entity using annotation or anything else ?
+- To avoid n+1 queries on a ManyToOne I have to give up the findAll / findBy methods and use the queryBuilder to make a LEFT JOIN. Is there a better way ? Does it affect Doctrine hydratation ?
+- I split my backend in a bundle instead of namespace. is it considered a good or bad practice ? Is there a way to prefix all routes inside a Bundle ?
+- The sidebar need to be shared accress pages. I created a service injected as a "global" twig variable [PartialService](https://github.com/Grafikart/BlogMVC-Symfony3/blob/master/src/AppBundle/Twig/Partials.php). Is there a better way to achieve that ?
+- For the timestamps (created_at and updated_at) I used a trait since it seemed to be the easies way to reach the goal. Is it considered bad ?

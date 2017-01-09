@@ -3,6 +3,7 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Category;
+use AppBundle\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -23,6 +24,7 @@ class PostType extends AbstractType
             ->add('name')
             ->add('slug', TextType::class, ['required' => false])
             ->add('category', EntityType::class, ['class' => Category::class, 'choice_label' => 'name'])
+            ->add('user', EntityType::class, ['class' => User::class, 'choice_label' => 'username', 'label' => 'Author'])
             ->add('content');
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
             $post = $event->getData();

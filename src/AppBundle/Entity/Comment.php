@@ -2,19 +2,23 @@
 
 namespace AppBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
+use AppBundle\Concern\Timestamps;
 use Symfony\Component\Validator\Constraints as Assert;
-use Cocur\Slugify\Slugify;
-use Symfony\Component\Validator\Mapping\ClassMetadata;
+
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Post
+ * Comment
  *
- * @ORM\Table(name="post")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\PostRepository")
+ * @ORM\Table(name="comment")
+ * @ORM\HasLifecycleCallbacks()
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\CommentRepository")
  */
-class Post
+class Comment
 {
+
+    use Timestamps;
+
     /**
      * @var int
      *
@@ -25,29 +29,25 @@ class Post
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity="Category", inversedBy="posts")
-     * @ORM\JoinColumn(name="category_id", referencedColumnName="id")
-     */
-    private $category;
-
-    /**
      * @var string
-     *
      * @Assert\NotBlank()
-     * @ORM\Column(name="name", type="string", length=255)
+     * @ORM\Column(name="username", type="string", length=255)
      */
-    private $name;
-
-    /**
-     * @var string
-     * @Assert\Regex("/^[a-z0-9\-]+$/")
-     * @ORM\Column(name="slug", type="string", length=255)
-     */
-    private $slug;
+    private $username;
 
     /**
      * @var string
      *
+     * @Assert\Email()
+     * @Assert\NotBlank())
+     *
+     * @ORM\Column(name="email", type="string", length=255)
+     */
+    private $email;
+
+    /**
+     * @var string
+     * @Assert\NotBlank()
      * @ORM\Column(name="content", type="text")
      */
     private $content;
@@ -55,16 +55,14 @@ class Post
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="created_at", type="datetime")
+     * @ORM\Column(name="createdAt", type="datetime")
      */
     private $createdAt;
 
     /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime")
+     * @ORM\ManyToOne(targetEntity="Post", inversedBy="comments")
      */
-    private $updatedAt;
+    private $post;
 
 
     /**
@@ -78,54 +76,51 @@ class Post
     }
 
     /**
-     * Set name
+     * Set username
      *
-     * @param string $name
+     * @param string $username
      *
-     * @return Post
+     * @return Comment
      */
-    public function setName($name)
+    public function setUsername($username)
     {
-        $this->name = $name;
+        $this->username = $username;
 
         return $this;
     }
 
     /**
-     * Get name
+     * Get username
      *
      * @return string
      */
-    public function getName()
+    public function getUsername()
     {
-        return $this->name;
+        return $this->username;
     }
 
     /**
-     * Set slug
+     * Set email
      *
-     * @param string $slug
+     * @param string $email
      *
-     * @return Post
+     * @return Comment
      */
-    public function setSlug($slug)
+    public function setEmail($email)
     {
-        if (empty($slug)) {
-            $slug = $this->name;
-        }
-        $this->slug = (new Slugify())->slugify($slug);
+        $this->email = $email;
 
         return $this;
     }
 
     /**
-     * Get slug
+     * Get email
      *
      * @return string
      */
-    public function getSlug()
+    public function getEmail()
     {
-        return $this->slug;
+        return $this->email;
     }
 
     /**
@@ -133,7 +128,7 @@ class Post
      *
      * @param string $content
      *
-     * @return Post
+     * @return Comment
      */
     public function setContent($content)
     {
@@ -157,7 +152,7 @@ class Post
      *
      * @param \DateTime $createdAt
      *
-     * @return Post
+     * @return Comment
      */
     public function setCreatedAt($createdAt)
     {
@@ -177,26 +172,30 @@ class Post
     }
 
     /**
-     * Set updatedAt
+     * Set post
      *
-     * @param \DateTime $updatedAt
+     * @param \AppBundle\Entity\Comment $post
      *
-     * @return Post
+     * @return Comment
      */
-    public function setUpdatedAt($updatedAt)
+    public function setPost(\AppBundle\Entity\Post $post = null)
     {
-        $this->updatedAt = $updatedAt;
+        $this->post = $post;
 
         return $this;
     }
 
     /**
-     * Get updatedAt
+     * Get post
      *
-     * @return \DateTime
+     * @return \AppBundle\Entity\Comment
      */
-    public function getUpdatedAt()
+    public function getPost()
     {
-        return $this->updatedAt;
+        return $this->post;
+    }
+
+    public function getGravatar () {
+        return "https://www.gravatar.com/avatar/" . md5($this->email) . '?d=mm&s=100';
     }
 }
