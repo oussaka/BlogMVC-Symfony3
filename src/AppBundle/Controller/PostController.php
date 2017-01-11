@@ -38,7 +38,7 @@ class PostController extends Controller
 
         return $this->render('post/index.html.twig', array(
             'posts' => $posts,
-            'page' => $request->query->getInt('page', 1)       ));
+            'page' => $request->query->getInt('page', 1)));
     }
 
     /**
@@ -80,7 +80,8 @@ class PostController extends Controller
      * @Route("/author/{id}", name="post_author")
      * @Method("GET")
      */
-    public function authorAction (Request $request, User $user) {
+    public function authorAction(Request $request, User $user)
+    {
         $em = $this->getDoctrine()->getManager();
         $query = $em->getRepository('AppBundle:Post')->createQueryBuilderWithCategory()
             ->orderBy("p.createdAt", "DESC")
@@ -103,7 +104,8 @@ class PostController extends Controller
      * @Route("/category/{slug}", name="post_category")
      * @Method("GET")
      */
-    public function categoryAction (Request $request, Category $category) {
+    public function categoryAction(Request $request, Category $category)
+    {
         $em = $this->getDoctrine()->getManager();
         $query = $em->getRepository('AppBundle:Post')->createQueryBuilderWithUser()
             ->orderBy("p.createdAt", "DESC")
@@ -119,6 +121,22 @@ class PostController extends Controller
             'category' => $category,
             'posts' => $posts,
             'page' => $request->query->getInt('page', 1)
+        ]);
+    }
+
+    public function sidebarAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+        $categories = $em->getRepository('AppBundle:Category')->findAll();
+        $posts = $em->getRepository('AppBundle:Post')->findBy(
+            [],
+            ['createdAt' => 'DESC'],
+            2,
+            0
+        );
+        return $this->render('partials/sidebar.html.twig', [
+            'categories' => $categories,
+            'posts' => $posts
         ]);
     }
 

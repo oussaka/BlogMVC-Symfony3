@@ -6,7 +6,7 @@
         {% block main %}{% endblock main %}
     </div>
     <div class="col-md-4">
-        {{ partials.sidebar() | raw }}
+        {{ render(controller('AppBundle:Post:sidebar')) }}
     </div>
 </div>
 {% endblock %}

@@ -39,8 +39,6 @@ framework:
 twig:
     debug:            "%kernel.debug%"
     strict_variables: "%kernel.debug%"
-    globals:
-      partials: "@app.twig_partials"
     form_themes:
         - 'form/bootstrap_4_layout.html.twig'
 # Doctrine Configuration
