@@ -23,6 +23,12 @@ class LoadCategoryData implements FixtureInterface
         $category->setPostCount(0);
         $manager->persist($category);
 
+        $category = new Category();
+        $category->setName('Test category 3');
+        $category->setslug('category-3');
+        $category->setPostCount(0);
+        $manager->persist($category);
+
         $manager->flush();
     }
 }
