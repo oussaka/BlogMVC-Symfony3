@@ -25,7 +25,8 @@
         "cocur/slugify": "^2.3",
         "knplabs/knp-paginator-bundle": "^2.5",
         "knplabs/knp-time-bundle": "^1.7",
-        "cebe/markdown": "^1.1"
+        "cebe/markdown": "^1.1",
+        "doctrine/doctrine-migrations-bundle": "^1.2"
     },
     "require-dev": {
         "sensio/generator-bundle": "^3.0",

@@ -6,6 +6,7 @@ This is my contribution to BlogMVC.com using Symfony 3. I used this project to l
 ```bash
 composer install
 php bin/console doctrine:schema:update --force
+# php bin/console doctrine:migrations:migrate
 php bin/console doctrine:fixtures:load
 php bin/console server:run
 ```
