@@ -54,6 +54,7 @@ class Post
     /**
      * @var string
      * @Assert\Regex("/^[a-z0-9\-]+$/")
+     * @Assert\NotBlank()
      * @ORM\Column(name="slug", type="string", length=255)
      */
     private $slug;
@@ -123,7 +124,6 @@ class Post
      * Set slug
      *
      * @param string $slug
-     *
      * @return Post
      */
     public function setSlug($slug)
@@ -306,4 +306,5 @@ class Post
     {
         return $this->comments;
     }
+
 }

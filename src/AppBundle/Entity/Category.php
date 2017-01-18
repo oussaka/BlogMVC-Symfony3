@@ -47,7 +47,7 @@ class Category
      *
      * @ORM\Column(name="post_count", type="integer")
      */
-    private $postCount;
+    private $postCount = 0;
 
 
     /**

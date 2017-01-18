@@ -5,8 +5,9 @@ parameters:
 
 services:
   app.excerpt_extension:
-    class: AppBundle\Twig\ExcerptExtension
+    class: AppBundle\Twig\TwigExtension
     public: false
+    autowire: true
     tags:
       - { name: twig.extension }
   app.counter_subscriber:

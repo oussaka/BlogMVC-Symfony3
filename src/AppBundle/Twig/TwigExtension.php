@@ -1,14 +1,31 @@
 <?php
 namespace AppBundle\Twig;
 
-class ExcerptExtension extends \Twig_Extension
+use cebe\markdown\GithubMarkdown;
+
+class TwigExtension extends \Twig_Extension
 {
+
+    private $parser;
+
+    /**
+     * TwigExtension constructor.
+     * @param $markdown_parser
+     */
+    public function __construct(GithubMarkdown $markdown_parser) {
+        $this->parser = $markdown_parser;
+    }
 
     public function getFilters()
     {
         return [
-            new \Twig_SimpleFilter('excerpt', [$this, 'excerptFilter'])
+            new \Twig_SimpleFilter('excerpt', [$this, 'excerptFilter']),
+            new \Twig_SimpleFilter('markdown', [$this, 'markdownFilter'], ['is_safe' => ['all']])
         ];
+    }
+
+    public function markdownFilter($content) {
+        return $this->parser->parse($content);
     }
 
     /**
@@ -30,6 +47,6 @@ class ExcerptExtension extends \Twig_Extension
 
     public function getName()
     {
-        return 'excerpt_extension';
+        return 'app_twig_extension';
     }
 }
