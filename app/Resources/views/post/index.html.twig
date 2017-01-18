@@ -42,7 +42,7 @@
                 on {{ post.createdAt | date("M dS Y") }}</small>
         </p>
         <p>
-            {{ post.content | excerpt(60) }}
+            {{ post.content | markdown | excerpt(60) }}
         </p>
         <p class="text-right">
             <a href="{{ path('post_show', {slug: post.slug}) }}" class="btn btn-primary">Read more...</a>
