@@ -84,7 +84,8 @@ class PostController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $query = $em->getRepository('AppBundle:Post')->createQueryBuilderWithCategory()
-            ->orderBy("p.createdAt", "DESC")
+            ->where("p.user = :user")
+            ->setParameter("user", $user)
             ->getQuery();
 
         $posts = $this->get('knp_paginator')->paginate(
@@ -108,7 +109,8 @@ class PostController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
         $query = $em->getRepository('AppBundle:Post')->createQueryBuilderWithUser()
-            ->orderBy("p.createdAt", "DESC")
+            ->where("p.category = :category")
+            ->setParameter("category", $category)
             ->getQuery();
 
         $posts = $this->get('knp_paginator')->paginate(
