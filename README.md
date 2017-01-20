@@ -1,6 +1,8 @@
 BlogMVC : Symfony 3
 ========================
 
+[![Build Status](https://travis-ci.org/Grafikart/BlogMVC-Symfony3.svg?branch=master)](https://travis-ci.org/Grafikart/BlogMVC-Symfony3)
+
 This is my contribution to BlogMVC.com using Symfony 3. I used this project to learn the framework so if you think some patterns are not respected please create an issue :). 
 
 ```bash
